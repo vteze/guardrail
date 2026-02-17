@@ -1,0 +1,301 @@
+/* ── Variables ───────────────────────────────────────────────────────────── */
+:root {
+  --bg-primary: #0f0f1a;
+  --bg-card: #1a1a2e;
+  --bg-hover: #16213e;
+  --accent: #e94560;
+  --accent-hover: #c73e54;
+  --text-primary: #e0e0e0;
+  --text-secondary: #8888a0;
+  --success: #4ecca3;
+  --success-hover: #3db88e;
+  --warning: #ffc857;
+  --danger: #e94560;
+  --border: #2a2a4a;
+  --radius: 8px;
+}
+
+/* ── Reset ───────────────────────────────────────────────────────────────── */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  width: 320px;
+  min-height: 200px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.container {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ── Header ──────────────────────────────────────────────────────────────── */
+header {
+  text-align: center;
+  padding-bottom: 4px;
+}
+
+.logo {
+  font-size: 28px;
+  margin-bottom: 4px;
+}
+
+header h1 {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: var(--accent);
+}
+
+.tagline {
+  font-size: 10px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+/* ── Card ────────────────────────────────────────────────────────────────── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px;
+}
+
+/* ── Status Rows ─────────────────────────────────────────────────────────── */
+.status-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+}
+
+.label {
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.value {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.value.danger {
+  color: var(--danger);
+}
+
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 6px 0;
+}
+
+/* ── Badges ──────────────────────────────────────────────────────────────── */
+.badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-on {
+  background: rgba(78, 204, 163, 0.15);
+  color: var(--success);
+}
+
+.badge-off {
+  background: rgba(136, 136, 160, 0.15);
+  color: var(--text-secondary);
+}
+
+/* ── Alerts ──────────────────────────────────────────────────────────────── */
+.alert {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border-radius: var(--radius);
+}
+
+.alert-warning {
+  background: rgba(255, 200, 87, 0.1);
+  border: 1px solid rgba(255, 200, 87, 0.3);
+}
+
+.alert-danger {
+  background: rgba(233, 69, 96, 0.1);
+  border: 1px solid rgba(233, 69, 96, 0.3);
+}
+
+.alert-icon {
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.alert-title {
+  font-weight: 700;
+  font-size: 12px;
+  margin-bottom: 2px;
+}
+
+.alert-detail {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, opacity 0.15s;
+}
+
+.btn:active {
+  opacity: 0.8;
+}
+
+.btn-accent {
+  background: var(--accent);
+  color: #fff;
+}
+
+.btn-accent:hover {
+  background: var(--accent-hover);
+}
+
+.btn-success {
+  background: var(--success);
+  color: #0f0f1a;
+}
+
+.btn-success:hover {
+  background: var(--success-hover);
+}
+
+.btn-danger {
+  background: var(--danger);
+  color: #fff;
+}
+
+.btn-danger:hover {
+  background: var(--accent-hover);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+}
+
+.btn-outline:hover {
+  background: var(--bg-hover);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.btn-ghost:hover {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+}
+
+.full-width {
+  width: 100%;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+/* ── Groups ──────────────────────────────────────────────────────────────── */
+.btn-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.btn-group.row {
+  flex-direction: row;
+}
+
+.section-label {
+  font-size: 10px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 6px;
+  margin-bottom: 2px;
+}
+
+/* ── Loss Form ───────────────────────────────────────────────────────────── */
+.loss-form {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.loss-form label {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.loss-form input {
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 8px 10px;
+  color: var(--text-primary);
+  font-size: 13px;
+  outline: none;
+  width: 100%;
+}
+
+.loss-form input:focus {
+  border-color: var(--accent);
+}
+
+/* ── Warning ─────────────────────────────────────────────────────────────── */
+.warning-text {
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.sub-text {
+  font-size: 11px;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+/* ── Utilities ───────────────────────────────────────────────────────────── */
+.hidden {
+  display: none !important;
+}
+
+footer {
+  padding-top: 4px;
+}

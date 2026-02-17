@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guardrail</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+
+    <!-- Header -->
+    <header>
+      <div class="logo">&#x1F6E1;&#xFE0F;</div>
+      <h1>GUARDRAIL</h1>
+      <p class="tagline">Protect your edge. Enforce your rules.</p>
+    </header>
+
+    <!-- Not Configured -->
+    <div id="not-configured" class="section card hidden">
+      <p class="warning-text">&#x26A0;&#xFE0F; Configuração necessária</p>
+      <p class="sub-text">Defina suas regras antes de operar.</p>
+      <button id="btn-configure" class="btn btn-accent full-width">Configurar Regras</button>
+    </div>
+
+    <!-- Status Panel -->
+    <div id="status-panel" class="section card hidden">
+      <div class="status-row">
+        <span class="label">Sessão</span>
+        <span id="session-status" class="badge badge-off">Inativa</span>
+      </div>
+      <div class="divider"></div>
+      <div class="status-row">
+        <span class="label">Stake Base</span>
+        <span id="val-stake-base" class="value">—</span>
+      </div>
+      <div class="status-row">
+        <span class="label">Stake Máx</span>
+        <span id="val-stake-max" class="value">—</span>
+      </div>
+      <div class="status-row">
+        <span class="label">Stop Diário</span>
+        <span id="val-stop-diario" class="value">—</span>
+      </div>
+      <div class="divider"></div>
+      <div class="status-row">
+        <span class="label">Perda Hoje</span>
+        <span id="val-perda" class="value danger">R$ 0,00</span>
+      </div>
+      <div class="status-row">
+        <span class="label">Loss Streak</span>
+        <span id="val-loss-streak" class="value">0</span>
+      </div>
+      <div class="status-row">
+        <span class="label">Bloqueios Hoje</span>
+        <span id="val-bloqueios" class="value">0</span>
+      </div>
+    </div>
+
+    <!-- Cooldown Alert -->
+    <div id="cooldown-panel" class="section alert alert-warning hidden">
+      <span class="alert-icon">&#x23F3;</span>
+      <div>
+        <p class="alert-title">Cooldown Ativo</p>
+        <p id="cooldown-msg" class="alert-detail">—</p>
+      </div>
+    </div>
+
+    <!-- Stop Diário Alert -->
+    <div id="stop-panel" class="section alert alert-danger hidden">
+      <span class="alert-icon">&#x1F6AB;</span>
+      <div>
+        <p class="alert-title">Stop Diário Atingido</p>
+        <p class="alert-detail">Sessão encerrada. Aguarde o reset diário.</p>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div id="actions" class="section hidden">
+      <div class="btn-group">
+        <button id="btn-session" class="btn btn-outline full-width">Iniciar Sessão</button>
+      </div>
+
+      <p class="section-label">Registrar Resultado</p>
+      <div class="btn-group row">
+        <button id="btn-win" class="btn btn-success flex-1">&#x2705; Win</button>
+        <button id="btn-loss" class="btn btn-danger flex-1">&#x274C; Loss</button>
+      </div>
+
+      <!-- Loss Form (hidden) -->
+      <div id="loss-form" class="loss-form hidden">
+        <label for="loss-amount">Valor da perda (R$)</label>
+        <input type="number" id="loss-amount" placeholder="0.00" step="0.01" min="0">
+        <div class="btn-group row">
+          <button id="btn-confirm-loss" class="btn btn-danger flex-1">Confirmar</button>
+          <button id="btn-cancel-loss" class="btn btn-outline flex-1">Cancelar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <button id="btn-options" class="btn btn-ghost full-width">&#x2699;&#xFE0F; Configurações</button>
+    </footer>
+
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

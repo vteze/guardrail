@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guardrail — Configurações</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="container">
+
+    <!-- Header -->
+    <header>
+      <div class="logo">&#x1F6E1;&#xFE0F;</div>
+      <h1>GUARDRAIL</h1>
+      <p class="subtitle">Livro de Regras & Configuração de Risco</p>
+    </header>
+
+    <!-- Rules Book -->
+    <section class="rules-card">
+      <h2>Livro de Regras</h2>
+      <p>Guardrail é uma camada de disciplina, não de sugestão. Ele vai bloquear apostas que violem as regras abaixo:</p>
+      <ul>
+        <li><strong>Stake Máxima</strong>: qualquer aposta acima de <em>Stake Máxima</em> é automaticamente bloqueada.</li>
+        <li><strong>Stop Diário</strong>: ao atingir o limite de perda diária, a sessão é encerrada até o reset.</li>
+        <li><strong>Cooldown</strong>: após 2 losses consecutivos ou escalação agressiva de stake, ativa um cooldown temporário com bloqueio total.</li>
+        <li><strong>Lock de Regras</strong>: depois de salvas, as regras ficam travadas por 24 horas e não podem ser mudadas durante sessão ativa.</li>
+      </ul>
+      <p class="rules-footnote">Se você quiser quebrar uma regra, terá que desinstalar a extensão. Guardrail não negocia.</p>
+    </section>
+
+    <!-- Lock Warning -->
+    <div id="lock-warning" class="alert alert-warning hidden">
+      <span class="alert-icon">&#x1F512;</span>
+      <div>
+        <p class="alert-title">Regras Bloqueadas</p>
+        <p id="lock-msg" class="alert-detail">—</p>
+      </div>
+    </div>
+
+    <!-- Session Warning -->
+    <div id="session-warning" class="alert alert-danger hidden">
+      <span class="alert-icon">&#x26A0;&#xFE0F;</span>
+      <div>
+        <p class="alert-title">Sessão Ativa</p>
+        <p class="alert-detail">Não é possível alterar regras durante uma sessão ativa.</p>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <form id="rules-form">
+      <div class="form-group">
+        <label for="stake_base">Stake Base (R$)</label>
+        <input type="number" id="stake_base" step="0.01" min="0" placeholder="Ex: 10.00" required>
+        <p class="help-text">Valor padrão por aposta.</p>
+      </div>
+
+      <div class="form-group">
+        <label for="stake_max">Stake Máxima (R$)</label>
+        <input type="number" id="stake_max" step="0.01" min="0" placeholder="Ex: 50.00" required>
+        <p class="help-text">Limite absoluto. Qualquer aposta acima será bloqueada.</p>
+      </div>
+
+      <div class="form-group">
+        <label for="stop_diario">Stop Diário (R$)</label>
+        <input type="number" id="stop_diario" step="0.01" min="0" placeholder="Ex: 200.00" required>
+        <p class="help-text">Perda máxima acumulada no dia. Sessão encerrada ao atingir.</p>
+      </div>
+
+      <div class="form-group toggle-group">
+        <div class="toggle-info">
+          <label for="loss_streak_toggle">Bloqueio após Loss Streak</label>
+          <p class="help-text">Ativa cooldown de 1h após 2 losses consecutivas ou escalação de stake.</p>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="loss_streak_toggle" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Confirmation -->
+      <div class="confirm-box" id="confirm-box">
+        <label class="checkbox-label">
+          <input type="checkbox" id="confirm-checkbox">
+          <span>Entendo que <strong>não poderei alterar essas regras durante uma sessão</strong> e que alterações aplicam um <strong>lock de 24 horas</strong>.</span>
+        </label>
+      </div>
+
+      <button type="submit" id="btn-save" class="btn btn-accent full-width" disabled>
+        Salvar Regras
+      </button>
+
+      <p id="save-feedback" class="feedback hidden"></p>
+    </form>
+
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>
