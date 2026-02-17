@@ -38,10 +38,16 @@ export function validateBet(
     };
   }
 
+  const stakesWindow = state.stakes_window || [];
+  const baseForEscalation =
+    stakesWindow.length > 0
+      ? stakesWindow.reduce((acc, v) => acc + v, 0) / stakesWindow.length
+      : state.last_stake;
+
   if (
     rules.ativar_bloqueio_apos_loss_streak &&
-    state.last_stake > 0 &&
-    stakeValue > state.last_stake * 1.5
+    baseForEscalation > 0 &&
+    stakeValue > baseForEscalation * 1.5
   ) {
     return {
       allowed: false,

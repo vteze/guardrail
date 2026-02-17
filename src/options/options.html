@@ -29,6 +29,16 @@
       <p class="rules-footnote">Se você quiser quebrar uma regra, terá que desinstalar a extensão. Guardrail não negocia.</p>
     </section>
 
+    <!-- Checklist -->
+    <section class="checklist-card">
+      <h2>Checklist de Configuração</h2>
+      <ul>
+        <li id="check-license">Licença ativa (código de acesso válido)</li>
+        <li id="check-stakes">Stake base / máxima definidas</li>
+        <li id="check-stop">Stop diário definido</li>
+      </ul>
+    </section>
+
     <!-- Lock Warning -->
     <div id="lock-warning" class="alert alert-warning hidden">
       <span class="alert-icon">&#x1F512;</span>
@@ -49,6 +59,28 @@
 
     <!-- Form -->
     <form id="rules-form">
+      <section class="rules-card">
+        <h2>Pagamento beta (R$19,90/mês)</h2>
+        <p>Escaneie o QR Code Pix abaixo ou use o código copia e cola para liberar o Guardrail por 30 dias.</p>
+        <div class="pix-row">
+          <div class="pix-qr-wrapper">
+            <img id="pix-qr" alt="QR Code Pix Guardrail" />
+          </div>
+          <div class="pix-code-column">
+            <pre id="pix-payload" class="pix-payload"></pre>
+            <button type="button" id="btn-copy-pix" class="btn btn-outline full-width">Copiar código PIX</button>
+          </div>
+        </div>
+      </section>
+
+      <div class="form-group">
+        <label for="license_code">Código de acesso (beta R$19,90)</label>
+        <input type="text" id="license_code" placeholder="Ex: GR-ABCDE123" autocomplete="off">
+        <p class="help-text">
+          Cole o código que você recebeu após o pagamento. Ele libera o Guardrail por 30 dias.
+        </p>
+      </div>
+
       <div class="form-group">
         <label for="stake_base">Stake Base (R$)</label>
         <input type="number" id="stake_base" step="0.01" min="0" placeholder="Ex: 10.00" required>
@@ -58,7 +90,9 @@
       <div class="form-group">
         <label for="stake_max">Stake Máxima (R$)</label>
         <input type="number" id="stake_max" step="0.01" min="0" placeholder="Ex: 50.00" required>
-        <p class="help-text">Limite absoluto. Qualquer aposta acima será bloqueada.</p>
+        <p class="help-text" id="stake_max_help">
+          Limite absoluto. Qualquer aposta acima será bloqueada.
+        </p>
       </div>
 
       <div class="form-group">

@@ -1,6 +1,7 @@
 import { GuardrailRules, GuardrailState, DEFAULT_RULES, DEFAULT_STATE } from "./shared/types";
 import { validateBet } from "./shared/rules";
 import { initDomResultDetection } from "./shared/domResults";
+import { hasValidLicense } from "./shared/license";
 
 // ---------------------------------------------------------------------------
 // Cache
@@ -164,7 +165,52 @@ function removeModal(): void {
 }
 
 // ---------------------------------------------------------------------------
-// Intercept
+// Intercept helpers
+// ---------------------------------------------------------------------------
+
+function handleBetIntent(e: Event, source: "click" | "submit" | "enter"): void {
+  const nowState = state;
+  if (!nowState.configured) return;
+  if (!hasValidLicense(nowState)) {
+    // Sem licença ativa, não bloqueia; apenas deixa o site seguir.
+    return;
+  }
+
+  if (!nowState.session_active) {
+    chrome.runtime.sendMessage({ type: "START_SESSION" });
+  }
+
+  const stakeValue = findStakeValue();
+  if (stakeValue <= 0) return;
+
+  const result = validateBet(stakeValue, rules, nowState);
+
+  if (!result.allowed) {
+    e.preventDefault();
+    if (e.cancelable !== false) {
+      e.stopPropagation();
+    }
+
+    showModal(result.message || "Você está quebrando sua política de risco.");
+
+    chrome.runtime.sendMessage({ type: "REGISTER_BLOCK" });
+
+    if (result.activateCooldown) {
+      chrome.runtime.sendMessage({ type: "ACTIVATE_COOLDOWN" });
+    }
+
+    refreshCache();
+    return;
+  }
+
+  chrome.runtime.sendMessage({
+    type: "UPDATE_LAST_STAKE",
+    stake: stakeValue,
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Intercept: click, submit, Enter
 // ---------------------------------------------------------------------------
 
 document.addEventListener(
@@ -172,40 +218,44 @@ document.addEventListener(
   (e: MouseEvent) => {
     const target = e.target as HTMLElement;
     if (!target) return;
-
     if (!isBetButton(target)) return;
-    if (!state.configured) return;
 
-    if (!state.session_active) {
-      chrome.runtime.sendMessage({ type: "START_SESSION" });
-    }
+    handleBetIntent(e, "click");
+  },
+  true
+);
 
-    const stakeValue = findStakeValue();
-    if (stakeValue <= 0) return;
+document.addEventListener(
+  "submit",
+  (e: SubmitEvent) => {
+    const target = e.target as HTMLElement | null;
+    if (!target) return;
 
-    const result = validateBet(stakeValue, rules, state);
+    // Se o form tiver algum botão de aposta ou input de stake, tratamos.
+    const hasBetButton = !!target.querySelector("button, [role='button']");
+    const hasStakeInput =
+      !!target.querySelector<HTMLInputElement>("input[name*='stake'], .stake-input");
 
-    if (!result.allowed) {
-      e.preventDefault();
-      e.stopPropagation();
-      e.stopImmediatePropagation();
+    if (!hasBetButton && !hasStakeInput) return;
 
-      showModal(result.message || "Você está quebrando sua política de risco.");
+    handleBetIntent(e, "submit");
+  },
+  true
+);
 
-      chrome.runtime.sendMessage({ type: "REGISTER_BLOCK" });
+document.addEventListener(
+  "keydown",
+  (e: KeyboardEvent) => {
+    if (e.key !== "Enter") return;
+    const active = document.activeElement as HTMLElement | null;
+    if (!active) return;
 
-      if (result.activateCooldown) {
-        chrome.runtime.sendMessage({ type: "ACTIVATE_COOLDOWN" });
-      }
+    const isStakeInput = STAKE_INPUT_SELECTORS.some((selector) =>
+      active.matches(selector)
+    );
+    if (!isStakeInput) return;
 
-      refreshCache();
-      return;
-    }
-
-    chrome.runtime.sendMessage({
-      type: "UPDATE_LAST_STAKE",
-      stake: stakeValue,
-    });
+    handleBetIntent(e, "enter");
   },
   true
 );

@@ -7,7 +7,7 @@ import {
 
 export async function getRules(): Promise<GuardrailRules> {
   const result = await chrome.storage.local.get("rules");
-  return result.rules ?? { ...DEFAULT_RULES };
+  return { ...DEFAULT_RULES, ...(result.rules ?? {}) };
 }
 
 export async function setRules(rules: GuardrailRules): Promise<void> {
@@ -16,7 +16,7 @@ export async function setRules(rules: GuardrailRules): Promise<void> {
 
 export async function getState(): Promise<GuardrailState> {
   const result = await chrome.storage.local.get("state");
-  return result.state ?? { ...DEFAULT_STATE };
+  return { ...DEFAULT_STATE, ...(result.state ?? {}) };
 }
 
 export async function setState(

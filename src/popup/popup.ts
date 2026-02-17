@@ -1,4 +1,5 @@
 import { GuardrailRules, GuardrailState } from "../shared/types";
+import { hasValidLicense } from "../shared/license";
 
 // ---------------------------------------------------------------------------
 // DOM References
@@ -13,6 +14,9 @@ const elCooldownPanel = $("cooldown-panel");
 const elCooldownMsg = $("cooldown-msg");
 const elStopPanel = $("stop-panel");
 const elActions = $("actions");
+const elLicenseBanner = document.getElementById(
+  "license-banner"
+) as HTMLElement | null;
 
 const elSessionStatus = $("session-status");
 const elStakeBase = $("val-stake-base");
@@ -74,6 +78,8 @@ function render(status: StatusResponse): void {
   const { rules, state, cooldownActive, cooldownRemaining, stopDiarioAtingido } =
     status;
 
+  const licenseOk = hasValidLicense(state);
+
   if (!state.configured) {
     show(elNotConfigured);
     hide(elStatusPanel);
@@ -86,6 +92,14 @@ function render(status: StatusResponse): void {
   hide(elNotConfigured);
   show(elStatusPanel);
   show(elActions);
+
+  if (elLicenseBanner) {
+    if (!licenseOk) {
+      elLicenseBanner.classList.remove("hidden");
+    } else {
+      elLicenseBanner.classList.add("hidden");
+    }
+  }
 
   // Session
   if (state.session_active) {
@@ -155,6 +169,10 @@ btnOptions.addEventListener("click", () => {
 
 btnSession.addEventListener("click", async () => {
   const status = await loadStatus();
+  if (!hasValidLicense(status.state)) {
+    chrome.runtime.openOptionsPage();
+    return;
+  }
   const msgType = status.state.session_active ? "END_SESSION" : "START_SESSION";
   chrome.runtime.sendMessage({ type: msgType }, () => refresh());
 });
@@ -174,14 +192,20 @@ btnCancelLoss.addEventListener("click", () => {
 });
 
 btnConfirmLoss.addEventListener("click", async () => {
-  const amount = parseFloat(elLossAmount.value);
+  const status = await loadStatus();
+  let amount = parseFloat(elLossAmount.value);
+
+  if ((isNaN(amount) || amount <= 0) && status.state.last_stake > 0) {
+    amount = status.state.last_stake;
+  }
+
   if (isNaN(amount) || amount <= 0) {
     elLossAmount.style.borderColor = "var(--danger)";
     return;
   }
+
   elLossAmount.style.borderColor = "";
 
-  const status = await loadStatus();
   chrome.runtime.sendMessage(
     {
       type: "REGISTER_LOSS",
