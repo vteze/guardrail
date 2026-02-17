@@ -1,5 +1,6 @@
 import { GuardrailRules, GuardrailState, DEFAULT_RULES, DEFAULT_STATE } from "./shared/types";
 import { validateBet } from "./shared/rules";
+import { initDomResultDetection } from "./shared/domResults";
 
 // ---------------------------------------------------------------------------
 // Cache
@@ -208,3 +209,24 @@ document.addEventListener(
   },
   true
 );
+
+// ---------------------------------------------------------------------------
+// DOM-based Win/Loss detection (BetBoom e futuros sites)
+// ---------------------------------------------------------------------------
+
+initDomResultDetection((result) => {
+  if (!state.configured || !state.session_active) return;
+
+  if (result === "win") {
+    chrome.runtime.sendMessage({ type: "REGISTER_WIN" });
+    // Após win, o loss_streak será zerado no background.
+  } else {
+    const lossAmount = state.last_stake || 0;
+    chrome.runtime.sendMessage({
+      type: "REGISTER_LOSS",
+      amount: lossAmount,
+      currentStake: state.last_stake || lossAmount,
+    });
+  }
+});
+

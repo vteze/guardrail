@@ -3,7 +3,7 @@
   "name": "Guardrail",
   "version": "1.0.0",
   "description": "Protect your edge. Enforce your rules. Consistência no longo prazo começa com regras que você não pode quebrar.",
-  "permissions": ["storage", "alarms"],
+  "permissions": ["storage", "alarms", "tabs"],
   "background": {
     "service_worker": "background.js"
   },

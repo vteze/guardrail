@@ -1,6 +1,10 @@
 import { getState, setState, getRules, resetDailyState } from "./shared/storage";
 
 const COOLDOWN_DURATION_MS = 60 * 60 * 1000; // 1 hora
+const BET_HOST_PATTERN = /\.bet\.br$/;
+
+// Mantém controle simples de quais abas já abriram o pop-up nesta sessão do SW
+const greetedTabs = new Set<number>();
 
 // --- First run / Install ----------------------------------------------------
 
@@ -9,6 +13,38 @@ chrome.runtime.onInstalled.addListener((details) => {
     // Abre automaticamente o livro de regras / configuração inicial
     chrome.runtime.openOptionsPage();
   }
+});
+
+// --- Tab navigation: abrir pop-up ao entrar em site de bet ------------------
+
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  if (changeInfo.status !== "complete") return;
+  if (!tab.url) return;
+
+  try {
+    const url = new URL(tab.url);
+    const host = url.hostname;
+
+    if (!BET_HOST_PATTERN.test(host)) return;
+    if (greetedTabs.has(tabId)) return;
+
+    greetedTabs.add(tabId);
+
+    const popupUrl = chrome.runtime.getURL("popup/popup.html");
+    chrome.windows.create({
+      url: popupUrl,
+      type: "popup",
+      width: 360,
+      height: 520,
+      focused: true,
+    });
+  } catch {
+    // URL inválida ou não http(s); ignorar
+  }
+});
+
+chrome.tabs.onRemoved.addListener((tabId) => {
+  greetedTabs.delete(tabId);
 });
 
 // --- Daily Reset -----------------------------------------------------------
